@@ -1,0 +1,642 @@
+import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
+
+class Oth {
+
+    static void hyouji(int A[][], List<Integer> Y, int countbl, int countwh) {   //hyouji(bannmenn,uterubasho,kuronokazu,shironokazu)
+        int p, q;                                                                
+        int[][] C = new int [8][8];
+        for (int i = 0; i < 8; i ++) {
+            for (int j = 0; j < 8; j ++) {
+                C[i][j] = A[i][j];
+            }
+        }
+        for (int l = 0; l < Y.size() / 2; l ++) {                                //012dekouseisaretaAniuterubashoY3wotuika
+            p = Y.get(l * 2);
+            q = Y.get(l * 2 + 1);
+            C[p][q] = 3;
+        }
+        System.out.println("        a");
+        System.out.println("        1  2  3  4  5  6  7  8");
+        System.out.println("       ________________________");
+        System.out.printf("b");
+        for (int i = 0; i < 8; i ++) {
+            System.out.print("  ");
+            System.out.print(i + 9); 
+            System.out.print(" |"); 
+            for (int j = 0; j < 8; j ++) { 
+                if (C[i][j] == 0) {
+                    System.out.print("   "); 
+                }
+                if (C[i][j] == 1) {
+                    System.out.printf("%3d", 1); 
+                }
+                if (C[i][j] == 2) {
+                    System.out.printf("%3d", 0); 
+                }
+                if (C[i][j] == 3) {
+                    System.out.print("   "); 
+                }
+            }
+            System.out.print("|"); 
+            System.out.println();
+        }           
+        System.out.println("      -------------------------"); 
+        System.out.println();
+        System.out.println("0---" + countbl); 
+        System.out.println("1---" + countwh); 
+    } 
+
+    static List<Integer> hanntei(int xa, int xb, int[][] A, int Z) {   //hanntei(azahyou,bzahyou,bannmenn,tebann) (bzahyou,azahyouno2tuinosuuretu)
+        int xxa, xxb, k;
+        List<Integer> X = new ArrayList<Integer>();
+        for (int m = 0; m < 4; m ++) {                                  //m ==1shita 2ue 3migi 4hidari
+            xxb = xb;
+            xxa = xa;
+            for (int i = 1; i < 8; i ++) {              
+                if (m == 0) {if (xxb < 7) { ++xxb; }}
+                if (m == 1) {if (xxb > 0) { --xxb; }}
+                if (m == 2) {if (xxa < 7) { ++xxa; }}
+                if (m == 3) {if (xxa > 0) { --xxa; }}                   
+                if (A[xxb][xxa] == 0) {                                 //0,shuuryou onaji,oidawokiroku chigau,keizoku
+                    break;
+                }
+                if (A[xxb][xxa] == Z) {
+                    if (m == 0) {
+                        for (int j = xb + 1; j < xxb; j ++) { 
+                            X.add(j);
+                            X.add(xa);
+                        }
+                    }
+                    if (m == 1) {
+                        for (int j = xb - 1; j > xxb; j --) { 
+                            X.add(j);
+                            X.add(xa);
+                        }
+                    }
+                    if (m == 2) {
+                        for (int j = xa + 1; j < xxa; j ++) {                           
+                            X.add(xb);
+                            X.add(j);
+                        }
+                    }
+                    if (m == 3) {
+                        for (int j = xa - 1; j > xxa; j --) { 
+                            X.add(xb);
+                            X.add(j);
+                        }
+                    } 
+                    break;   
+                }                              
+            }           
+        }
+        for (int m = 0; m < 4; m ++) {                                     //1migishita 2migiue 3hidariue 4hidarishita
+            xxb = xb;
+            xxa = xa;
+            for (int i = 1; i < 8; i ++) {
+                if (m == 0) {if (xxb < 7 && xxa < 7) {++xxb; ++xxa;}}
+                if (m == 1) {if (xxb > 0 && xxa < 7) {--xxb; ++xxa;}}
+                if (m == 2) {if (xxb > 0 && xxa > 0) {--xxb; --xxa;}}
+                if (m == 3) {if (xxb < 7 && xxa > 0) {++xxb; --xxa;}}             
+                if (A[xxb][xxa] == 0) {
+                    break;
+                }
+                if (A[xxb][xxa] == Z) {
+                    if (m == 0) {
+                        k = xa + 1;
+                        for (int j = xb + 1; j < xxb; j ++){
+                            X.add(j);
+                            X.add(k);
+                            ++k;
+                        }
+                    }
+                    if (m == 1) {
+                        k = xa + 1;
+                        for (int j = xb - 1; j > xxb; j --) {
+                            X.add(j);
+                            X.add(k);
+                            ++k;
+                        } 
+                    }
+                    if (m == 2) {
+                        k = xa - 1;
+                        for (int j = xb - 1; j > xxb; j --) {
+                            X.add(j);
+                            X.add(k);
+                            --k;
+                        }
+                    }
+                    if (m == 3) {
+                        k = xa - 1;
+                        for (int j = xb + 1; j < xxb; j ++) {
+                            X.add(j);
+                            X.add(k);
+                            --k;
+                        }
+                    }
+                    break;
+                }     
+            }
+        }
+        return X;
+    }
+
+    static List<Integer> uterubasho(int[][] A, int Z) {                //uterubasho(bannmenn,tebann) (b,a2tsuinosuuretu)
+        List<Integer> X = new ArrayList<Integer>();
+        List<Integer> Y = new ArrayList<Integer>();
+        for (int i = 0; i < 8; i ++) {
+            for (int j = 0; j < 8; j ++) {
+                if (A[i][j] == 0) {
+                    X = hanntei(j, i, A, Z);                           //hikkurigaetubashogaarebaYnikiroku
+                    if (X.size() > 1) {
+                        Y.add(i);
+                        Y.add(j);
+                    }
+                    X.clear();
+                }
+            }
+        }
+        return Y;
+    }
+
+    static int kado(int a, int b, int[][] A, int Z) {                //kado(a,b,bannmenn,tebann)(seisuu)kadoutarerunarakitoku
+        List<Integer> Y = new ArrayList<Integer>();
+        int[][] C = new int [8][8];
+        int p, q;
+        int k = 0;
+        int bl = 1;
+        int wh = 2;
+        C = uragaesu(a, b, A, Z);
+        if(Z == bl) {
+            Z = wh;
+        }
+        else {
+            Z = bl;
+        }
+        Y = uterubasho(C, Z);
+        for(int i = 0; i < Y.size() / 2; i ++) {
+            p = Y.get(i * 2);
+            q = Y.get(i * 2 + 1);                                           
+            if (p == 0 && q == 0) {
+                k = 2;
+            }
+            if (p == 0 && q == 7) {
+                k = 2;
+            }
+            if (p == 7 && q == 0) {
+                k = 2;
+            }
+            if (p == 7 && q == 7) {
+                k = 2;
+            }
+        }
+        return k;
+    }
+
+    static int[][] hyoukachi(int[][] A, int Z, int O) {                   //saisenn(bannmenn,tebann,tesuu) (x[25][12])
+        List<Integer> ybl = new ArrayList<Integer>();
+        List<Integer> ywh = new ArrayList<Integer>();
+        List<Integer> YY = new ArrayList<Integer>();
+        List<Integer> Y = new ArrayList<Integer>();
+        YY = uterubasho(A, Z);
+        int[][] X = new int [25][12];                                 //0goukei 1a 2b 3uterukosuu 4hikkurigaerukosuu 5zahyou 
+        int[] Xc = new int [12];
+        int[][] C = new int [8][8];
+        int p, q, z, m, top, r, s;
+        int count = 24;
+        int KK = 0;
+        int yblc = 0;
+        int ywhc = 0;
+        int Top = -1000;
+        int bl = 1;
+        int wh = 2;
+        int K = YY.size() / 2;
+        for (int l = 0; l < K; l ++) {    
+            for (int i = 0; i < 8; i ++) {
+                for (int j = 0; j < 8; j ++) {
+                    C[i][j] = A[i][j];
+                }
+            }
+            p = YY.get(l * 2);
+            q = YY.get(l * 2 + 1);                                    //uterubasho(p,q)
+            if (A[0][0] == 0) {                                       //kadoaiterunara(kado+20 kadoyoko-5 hoshi-13)
+                if (p == 0 && q == 0) {
+                    X[l][5] += 20;
+                }
+                if (p == 1 && q == 0) {
+                    X[l][5] -= 5;
+                }
+                if (p == 0 && q == 1) {
+                    X[l][5] -= 5;
+                }
+                if (p == 1 && q == 1) {
+                    X[l][5] -= 13;
+                }
+            }
+            if (A[0][7] == 0) {
+                if (p == 0 && q == 7) {
+                    X[l][5] += 20;
+                }
+                if (p == 1 && q == 7) {
+                    X[l][5] -= 5;
+                }
+                if (p == 0 && q == 6) {
+                    X[l][5] -= 5;
+                }
+                if (p == 1 && q == 6) {
+                    X[l][5] -= 13;
+                }
+            }
+            if (A[7][0] == 0) {
+                if (p == 7 && q == 0) {
+                    X[l][5] += 20;
+                }
+                if (p == 6 && q == 0) {
+                    X[l][5] -= 5;
+                }
+                if (p == 7 && q == 1) {
+                    X[l][5] -= 5;
+                }
+                if (p == 6 && q == 1) {
+                    X[l][5] -= 13;
+                }
+            }
+            if (A[7][7] == 0) {
+                if (p == 7 && q == 7) {
+                    X[l][5] += 20;
+                }
+                if (p == 6 && q == 7) {
+                    X[l][5] -= 5;
+                }
+                if (p == 7 && q == 6) {
+                    X[l][5] -= 5;
+                }
+                if (p == 6 && q == 6) {
+                    X[l][5] -= 13;
+                }
+            }
+            if (O <= 16) {                                               //4(4)-2x(21)-x(48)0(57)2x(60)4x(64)
+                X[l][4] = - hanntei(q, p, C, Z).size();                 
+            }
+            if (17 <= O && O <= 44) {
+                X[l][4] = - hanntei(q, p, C, Z).size() / 2;
+            }
+            if (53 <= O && O <= 56) {
+                X[l][4] = hanntei(q, p, C, Z).size();
+            }
+            if (57 <= O) {
+                X[l][4] = hanntei(q, p, C, Z).size() * 2;
+            }
+            C = uragaesu(q, p, C, Z);                                 //kateishiteuragaeshitaatonobannmenn
+            Y = uterubasho(C, Z);                                     //tebanngauterubasho
+            ybl = uterubasho(C, bl);                                  //kurogauterubasho
+            ywh = uterubasho(C, wh);                                  //shirogauterubaso
+            if (Z == bl) {
+                if (ywh.size() == 0) {
+                    X[l][5] += 50;                                    //pasu+50
+                }
+                for (int i = 0; i < ywh.size() / 2; i ++) {
+                    r = ywh.get(i * 2);
+                    s = ywh.get(i * 2 + 1);
+                    if (r == 0 && s == 0) {                           //yokokarakadoniutareru-25
+                        X[l][5] -= 25;
+                        if (p == 1 && q == 1) {
+                            X[l][5] += 15;                            //nanamekarakadoniutareru-10
+                        }
+                    }
+                    if (r == 7 && s == 7) {
+                        X[l][5] -= 25;
+                        if (p == 6 && q == 6) {
+                            X[l][5] += 15;
+                        }
+                    }
+                    if (r == 0 && s == 7) {
+                        X[l][5] -= 25;
+                        if (p == 1 && q == 6) {
+                            X[l][5] += 15;
+                        }
+                    }
+                    if (r == 7 && s == 0) {
+                        X[l][5] -= 25;
+                        if (p == 6 && q == 1) {
+                            X[l][5] += 15;
+                        }
+                    }
+                }
+            }
+            if (Z == wh) {
+                if (ybl.size() == 0) {
+                    X[l][5] += 50;
+                }
+                for (int i = 0; i < ybl.size() / 2; i ++) {
+                    r = ybl.get(i * 2);
+                    s = ybl.get(i * 2 + 1);
+                    if (r == 0 && s == 0) {
+                        X[l][5] -= 25;
+                        if (p == 1 && q == 1) {
+                            X[l][5] += 15;
+                        }
+                    }
+                    if (r == 7 && s == 7) {
+                        X[l][5] -= 25;
+                        if (p == 6 && q == 6) {
+                            X[l][5] += 15;
+                        }
+                    }
+                    if (r == 0 && s == 7) {
+                        X[l][5] -= 25;
+                        if (p == 1 && q == 6) {
+                            X[l][5] += 15;
+                        }
+                    }
+                    if (r == 7 && s == 0) {
+                        X[l][5] -= 25;
+                        if (p == 6 && q == 1) {
+                            X[l][5] += 15;
+                        }
+                    }
+                }
+            }
+            for (int i = 0; i < ybl.size() / 2; i ++) {              //kadotorarerunarauterunikaunntoshinai
+                r = ybl.get(i * 2);
+                s = ybl.get(i * 2 + 1);
+                KK = kado(s, r, A, Z);
+                yblc += KK;
+            }
+            for (int i = 0; i < ywh.size() / 2; i ++) {
+                r = ywh.get(i * 2);
+                s = ywh.get(i * 2 + 1);
+                KK = kado(s, r, A, Z);
+                ywhc += KK;
+            }
+            if (Z == bl) {
+                X[l][6] = ybl.size() / 2;
+                X[l][7] = - ywh.size() / 2;
+                X[l][8] = - yblc / 2;
+                X[l][9] = ywhc / 2;
+                X[l][3] = (ybl.size() - ywh.size() - yblc + ywhc) / 2;       //3uterbashonosa
+            }
+            else {
+                X[l][6] = ywh.size() / 2;
+                X[l][7] = - ybl.size() / 2;
+                X[l][8] = - ywhc / 2;
+                X[l][9] = yblc / 2;
+                X[l][3] = (ywh.size() - ybl.size() - ywhc + yblc) / 2;
+            }
+            for (int i = 3; i < 6; i ++) {
+                X[l][0] += X[l][i];
+            }
+            X[l][1] = q + 1;
+            X[l][2] = p + 9;
+            yblc = 0;
+            ywhc = 0;
+        }
+        for (int i = 0; i < 25; i ++) {
+            if (X[i][1] == 0 && X[i][2] == 0) {
+                X[i][0] = -500;
+            }
+        }
+        for (int i = 0; i < 25; i ++) {                            //narabekae
+            for (int j = i; j < 25; j ++) {    
+                if (X[j][0] > Top) {
+                    Top = X[j][0];
+                    count = j;
+                    for (int k = 0; k < 12; k ++) {    
+                        Xc[k] = X[j][k];
+                    }
+                }
+            }
+            for (int k = 0; k < 12; k ++) {    
+                X[count][k] = X[i][k];
+            }
+            for (int k = 0; k < 12; k ++) {    
+                X[i][k] = Xc[k];
+            }
+            Top = -1000;
+        }
+        return X;
+    }
+
+    static int[] saizenn(int[][] A, int Z, int O) {                       //saizenn(bannmenn,tebann,tesuu)(a,b)
+        int[] XY = new int [2];
+        int[][] X = new int [25][12]; 
+        int[][] XX = new int [25][12];
+        int[][] AA = new int [8][8]; 
+        int[] Xc = new int [12];
+        int count = 24;
+        int Top = -1000;
+        int zz;
+        int bl = 1;
+        int wh = 2;
+        int p, q, OO;
+        X = hyoukachi(A, Z, O);
+        for(int i = 0; i < 25; i ++) {
+            p = X[i][2] - 9;
+            q = X[i][1] - 1;
+            if (X[i][0] == -500) {
+                X[i][11] = -500;
+                continue;
+            }
+            if(0 <= q && q <= 7){
+                if(0 <= p && p <= 7){
+                    AA = uragaesu(q, p, A, Z);
+                    if(Z == bl) {
+                        zz = wh;
+                    }
+                    else {
+                        zz = bl;
+                    }
+                    OO = O + 1;
+                    XX = hyoukachi(AA, zz, OO);  
+                    X[i][10] = XX[0][0];    
+                    X[i][11] = X[i][0] - X[i][10];   
+                }
+            }            
+        } 
+        for (int i = 0; i < 25; i ++) {                            //narabekae
+            for (int j = i; j < 25; j ++) {    
+                if (X[j][11] > Top) {
+                    Top = X[j][11];
+                    count = j;
+                    for (int k = 0; k < 12; k ++) {    
+                        Xc[k] = X[j][k];
+                    }
+                }
+            }
+            for (int k = 0; k < 12; k ++) {    
+                X[count][k] = X[i][k];
+            }
+            for (int k = 0; k < 12; k ++) {    
+                X[i][k] = Xc[k];
+            }
+            Top = -1000;
+        }
+        for (int i = 0; i < 25; i ++) {                           //hyouji
+            if (X[i][11] == -500) {
+                continue;
+            }
+            for (int j = 0; j < 12; j ++) {
+                System.out.printf("%3d", X[i][j]);
+            }
+
+            System.out.println(" ");
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+            }
+        }    
+        XY[1] = X[0][2] - 9;
+        XY[0] = X[0][1] - 1;  
+        return XY;
+    }
+
+    static int[][] uragaesu(int xa, int xb, int[][] A, int Z) {     //uragaesu(a,b,bannmann,tebann)(matorikkusu)
+        int p, q;
+        List<Integer> X = new ArrayList<Integer>();
+        int[][] AA = new int [8][8];
+        for (int i = 0; i < 8; i ++) {
+            for (int j = 0; j < 8; j ++) {
+                AA[i][j] = A[i][j];
+            }
+        }
+        X = hanntei(xa, xb, A, Z);
+        AA[xb][xa] = Z;
+        for(int i = 0; i < X.size() / 2; i ++) {
+            p = X.get(i * 2);
+            q = X.get(i * 2 + 1);
+            AA[p][q] = Z;                                           //hannteinojyouhoukarauragaesu
+        }
+        return AA;
+    }
+
+    public static void main(String[] args)throws InterruptedException{  //main
+        Scanner stdIn = new Scanner(System.in);
+        int[][] A = new int [8][8];                                   //teigi
+        int[] XX = new int [2];
+        List<Integer> X = new ArrayList<Integer>();
+        List<Integer> Y = new ArrayList<Integer>();
+        List<Integer> ybl = new ArrayList<Integer>();
+        List<Integer> ywh = new ArrayList<Integer>();
+        boolean ok;
+        int a, b, p, q;
+        int xa = 0;
+        int xb = 0;
+        int countbl = 2;
+        int countwh = 2;
+        final int bl = 1;
+        final int wh = 2;
+        A[3][3] = bl;
+        A[4][4] = bl;
+        A[3][4] = wh;
+        A[4][3] = wh;
+        int Z = bl;
+        int z = wh;
+        Y = uterubasho(A, Z);
+        ybl = uterubasho(A, bl);
+        ywh = uterubasho(A, wh);
+
+        hyouji(A, Y, countbl, countwh);  
+        for (int l = 1; l < 80; l ++) {
+            Y = uterubasho(A, Z);
+            if (Y.size() == 0) {                              //uterubashonakerebakoutai
+                if(Z == bl) {
+                    Z = wh;
+                }
+                else {
+                    Z = bl;
+                }
+                continue;
+            }
+            if (Z == wh) {                                    //2naragidouuchi
+                XX = saizenn(A, Z, l);
+                xa = XX[0];
+                xb = XX[1];
+                A = uragaesu(xa, xb, A, Z);
+                if(Z == bl) {                                //koutai
+                    Z = wh;
+                }
+                else {
+                    Z = bl;
+                }
+                Y = uterubasho(A, Z);                        //hyouginotamenojyouhouatume
+                for (int i = 0; i < 8; i ++) {
+                    for (int j = 0; j < 8; j ++) {
+                        if (A[i][j] == 1) {
+                            countbl += 1;
+                        }
+                        if (A[i][j] == 2) {
+                            countwh += 1;
+                        }
+                    }
+                }
+                hyouji(A, Y, countbl, countwh); 
+                countbl =  0;
+                countwh = 0;
+                continue;
+            }
+            ok = false;                                   //nyuuryoku
+            while (ok == false){
+                System.out.printf("a---"); 
+                a = stdIn.nextInt();
+                System.out.printf("b---"); 
+                b = stdIn.nextInt();
+                if (a == 0 && b == 0) {                  //00dekyouseishuuryou
+                    System.exit(0);
+                }
+                xa = a - 1;
+                xb = b - 9;
+                if (0 < a && a < 9) {
+                    if (8 < b && b < 17) {
+                        if (A[xb][xa] == 0) {
+                            X = hanntei(xa, xb, A, Z);
+                            if (X.size() > 0) {
+                                ok = true;
+                            }
+                        }
+                    }
+                }       
+            }
+            A = uragaesu(xa, xb, A, Z);                     //koutei
+            if(Z == bl) {
+                Z = wh;
+            }
+            else {
+                Z = bl;
+            }
+            Y = uterubasho(A, Z);                           //hyouginotamenojyouhouatume
+            ybl = uterubasho(A, bl);
+            ywh = uterubasho(A, wh);
+            for (int i = 0; i < 8; i ++) {
+                for (int j = 0; j < 8; j ++) {
+                    if (A[i][j] == 1) {
+                        countbl += 1;
+                    }
+                    if (A[i][j] == 2) {
+                        countwh += 1;
+                    }
+                }
+            }
+            hyouji(A, Y, countwh, countbl); 
+            countbl =  0;
+            countwh = 0;
+            X.clear();
+        }
+        for (int i = 0; i < 8; i ++) {              //shuukeitokekka
+            for (int j = 0; j < 8; j ++) {
+                if (A[i][j] == 1) {
+                    countbl += 1;
+                }
+                if (A[i][j] == 2) {
+                    countwh += 1;
+                }
+            }
+        }
+        if (countbl > countwh) {
+            System.out.println("win"); 
+        }
+        else {
+            System.out.println("loose");
+        }
+    }
+}
